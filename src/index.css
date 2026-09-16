@@ -1,0 +1,55 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+  color: #d7dee2;
+  background: #12181d;
+  overflow-x: hidden;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+:root {
+  --header-height: clamp(50px, 5vw, 64px);
+  --page-gutter: clamp(0.75rem, 2.5vw, 1.5rem);
+  --column-width: clamp(240px, 25vw, 320px);
+  --sidebar-width: 16.666%;
+  --board-bg: #1b2329;
+  --column-bg: #252e35;
+  --ticket-bg: #303a42;
+  --border: #3a474f;
+  --text-muted: #9aa8af;
+  --accent: #c76b4f;
+  --ink: #0d1216;
+  --teal: #5d9295;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

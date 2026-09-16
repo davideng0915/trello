@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS boards (
+  id UUID PRIMARY KEY,
+  title TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS columns (
+  id UUID PRIMARY KEY,
+  board_id UUID NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  position INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS tickets (
+  id UUID PRIMARY KEY,
+  column_id UUID NOT NULL REFERENCES columns(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  details TEXT NOT NULL DEFAULT '',
+  completed BOOLEAN NOT NULL DEFAULT FALSE,
+  position INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS comments (
+  id UUID PRIMARY KEY,
+  ticket_id UUID NOT NULL REFERENCES tickets(id) ON DELETE CASCADE,
+  text TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS columns_board_position_idx ON columns (board_id, position);
+CREATE INDEX IF NOT EXISTS tickets_column_position_idx ON tickets (column_id, position);
+CREATE INDEX IF NOT EXISTS comments_ticket_created_idx ON comments (ticket_id, created_at);
+
+INSERT INTO boards (id, title)
+SELECT '00000000-0000-0000-0000-000000000001', 'My trello board'
+WHERE NOT EXISTS (SELECT 1 FROM boards);
+
+INSERT INTO columns (id, board_id, title, position)
+SELECT '00000000-0000-0000-0000-000000000011', '00000000-0000-0000-0000-000000000001', 'To Do', 0
+WHERE NOT EXISTS (SELECT 1 FROM columns);
+
+INSERT INTO columns (id, board_id, title, position)
+SELECT '00000000-0000-0000-0000-000000000012', '00000000-0000-0000-0000-000000000001', 'In Progress', 1
+WHERE NOT EXISTS (SELECT 1 FROM columns WHERE title = 'In Progress');
+
+INSERT INTO columns (id, board_id, title, position)
+SELECT '00000000-0000-0000-0000-000000000013', '00000000-0000-0000-0000-000000000001', 'Done', 2
+WHERE NOT EXISTS (SELECT 1 FROM columns WHERE title = 'Done');
